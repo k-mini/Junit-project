@@ -108,5 +108,40 @@ public class BookRepositoryTest {
         assertFalse(bookRepository.findById(id).isPresent());
 
     }
+
+    // 실행 전 junit, 겟인데어 들어옴
     // 5. 책 수정
+    @Sql("classpath:db/tableInit.sql")
+    @Test
+    public void 책수정_test() {
+        // given
+        Long id = 1L;
+        String title = "junit5";
+        String author = "메타코딩";
+        Book book = new Book(id, title, author);
+
+        // when
+        // bookRepository.findAll().stream()
+        // .forEach(b -> {
+        // System.out.println(b.getId());
+        // System.out.println(b.getTitle());
+        // System.out.println(b.getAuthor());
+        // System.out.println("======================= 1");
+        // });
+
+        Book bookPs = bookRepository.save(book);
+
+        // bookRepository.findAll().stream()
+        // .forEach(b -> {
+        // System.out.println(b.getId());
+        // System.out.println(b.getTitle());
+        // System.out.println(b.getAuthor());
+        // System.out.println("======================= 2");
+        // });
+
+        // then
+        assertEquals(id, bookPs.getId());
+        assertEquals(title, bookPs.getTitle());
+        assertEquals(author, bookPs.getAuthor());
+    }
 }
