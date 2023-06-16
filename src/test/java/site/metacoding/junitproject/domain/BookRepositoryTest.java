@@ -1,25 +1,27 @@
 package site.metacoding.junitproject.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.util.List;
+import java.util.Optional;
 
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest // DB와 관련된 컴포넌트만 메모리에 로딩
 public class BookRepositoryTest {
 
-    @Autowired // DI
+    @Autowired // DI DB와 관련된 컴포넌트를 메모리에 로딩했기 떄문에 주입 가능.
     private BookRepository bookRepository;
 
     // @BeforeAll // 테스트 시작전에 한번만 실행
     @BeforeEach // 각 테스트 시작전에 한번씩 실행
     public void dataReady() {
-        System.out.println("========================================================");
+        System.out.println("======================================================== 데이터 준비");
         String title = "junit";
         String author = "겟인데어";
         Book book = Book.builder()
@@ -31,9 +33,20 @@ public class BookRepositoryTest {
       // 가정 1 : [ 데이터준비() + 1. 책등록 ] (T) , [ 데이터준비() + 2. 책목록보기] (T) -> 사이즈 1 (검증 완료)
       // 가정 2 : [ 데이터준비() + 1. 책등록 + 데이터준비() + 2. 책목록보기 ] (T) -> 사이즈 2 (검증 실패)
 
+    // JUnit 테스트
+    // 1. 테스트 메서드 3개가 있다. (순서 보장이 안된다) - Order() 어노테이션
+    // (1) 메서드 1
+    // (2) 메서드 2
+    // (3) 메서드 3
+    // 2. 테스트 메서드가 하나 실행 후 종료되면 데이터가 초기화된다. - Transactional() 어노테이션
+    // (1) 1건
+    // (2) 2건
+    // -> 트랜잭션 종료 -> 데이터 초기화
+    // *** primary key_auto_increment 값이 초기화가 안됨
+
     // 1. 책 등록
     @Test
-    public void bookRegistration_test() {
+    public void 책등록_test() {
         // given (데이터 준비)
         String title = "junit5";
         String author = "메타코딩";
@@ -52,7 +65,7 @@ public class BookRepositoryTest {
 
     // 2. 책 목록보기
     @Test
-    public void bookList_test() {
+    public void 책목록보기_test() {
         // given
         String title = "junit";
         String author = "겟인데어";
@@ -66,8 +79,9 @@ public class BookRepositoryTest {
     } // 트랜잭션 종료 (저장된 데이터를 초기화함)
 
     // 3. 책 한건보기
+    @Sql("classpath:db/tableInit.sql")
     @Test
-    public void bookOne_test() {
+    public void 책한건보기_test() {
         // given
         String title = "junit";
         String author = "겟인데어";
@@ -80,7 +94,19 @@ public class BookRepositoryTest {
         assertEquals(author, bookPS.getAuthor());
     } // 트랜잭션 종료 (저장된 데이터를 초기화함)
 
-    // 4. 책 수정
+    // 4. 책 삭제
+    @Sql("classpath:db/tableInit.sql")
+    @Test
+    public void 책삭제_test() {
+        // given
+        Long id = 1L;
 
-    // 5. 책 삭제
+        // when
+        bookRepository.deleteById(id);
+
+        // then
+        assertFalse(bookRepository.findById(id).isPresent());
+
+    }
+    // 5. 책 수정
 }
