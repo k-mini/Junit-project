@@ -1,22 +1,25 @@
 package site.metacoding.junitproject.web.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import site.metacoding.junitproject.domain.Book;
 
 @NoArgsConstructor
 @Getter
 @Setter
 public class BookRespDto {
+    
     private Long id;
     private String title;
     private String author;
 
-    public BookRespDto toDto(Book bookPs){
-        this.id = bookPs.getId();
-        this.title = bookPs.getTitle();
-        this.author = bookPs.getAuthor();
-        return this;
+    @Builder
+    public BookRespDto(Long id, String title, String author) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
     }
+
+    
 }
