@@ -1,12 +1,10 @@
 package site.metacoding.junitproject.service;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,8 +17,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import site.metacoding.junitproject.domain.Book;
 import site.metacoding.junitproject.domain.BookRepository;
 import site.metacoding.junitproject.util.MailSender;
-import site.metacoding.junitproject.web.dto.BookRespDto;
-import site.metacoding.junitproject.web.dto.BookSaveReqDto;
+import site.metacoding.junitproject.web.dto.reponse.BookListRespDto;
+import site.metacoding.junitproject.web.dto.reponse.BookRespDto;
+import site.metacoding.junitproject.web.dto.request.BookSaveReqDto;
 
 @ExtendWith(MockitoExtension.class)
 public class BookServiceTest {
@@ -61,6 +60,7 @@ public class BookServiceTest {
 
     }
 
+    // 체크포인트
     @Test
     public void 책목록보기_테스트() {
 
@@ -73,7 +73,8 @@ public class BookServiceTest {
         when(bookRepository.findAll()).thenReturn(books);
 
         // when (실행)
-        List<BookRespDto> bookRespDtoList = bookService.책목록보기();
+        // List<BookRespDto> bookRespDtoList = bookService.책목록보기();
+        BookListRespDto bookRespDtoList = bookService.책목록보기();
 
         // print
         // bookRespDtoList.stream().forEach(dto -> {
@@ -83,10 +84,15 @@ public class BookServiceTest {
         // });
 
         // then (검증)
-        assertThat(bookRespDtoList.get(0).getTitle()).isEqualTo("junit 강의");
-        assertThat(bookRespDtoList.get(0).getAuthor()).isEqualTo("메타코딩");
-        assertThat(bookRespDtoList.get(1).getTitle()).isEqualTo("spring 강의");
-        assertThat(bookRespDtoList.get(1).getAuthor()).isEqualTo("겟인데어");
+        // assertThat(bookRespDtoList.get(0).getTitle()).isEqualTo("junit 강의");
+        // assertThat(bookRespDtoList.get(0).getAuthor()).isEqualTo("메타코딩");
+        // assertThat(bookRespDtoList.get(1).getTitle()).isEqualTo("spring 강의");
+        // assertThat(bookRespDtoList.get(1).getAuthor()).isEqualTo("겟인데어");
+
+        assertThat(bookRespDtoList.getItems().get(0).getTitle()).isEqualTo("junit 강의");
+        assertThat(bookRespDtoList.getItems().get(0).getAuthor()).isEqualTo("메타코딩");
+        assertThat(bookRespDtoList.getItems().get(1).getTitle()).isEqualTo("spring 강의");
+        assertThat(bookRespDtoList.getItems().get(1).getAuthor()).isEqualTo("겟인데어");
 
     }
 

@@ -1,4 +1,4 @@
-package site.metacoding.junitproject.web.dto;
+package site.metacoding.junitproject.web.dto.reponse;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BookRespDto {
-    
+
     private Long id;
     private String title;
     private String author;
@@ -21,5 +21,4 @@ public class BookRespDto {
         this.author = author;
     }
 
-    
 }

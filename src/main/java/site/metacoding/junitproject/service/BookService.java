@@ -11,8 +11,9 @@ import lombok.RequiredArgsConstructor;
 import site.metacoding.junitproject.domain.Book;
 import site.metacoding.junitproject.domain.BookRepository;
 import site.metacoding.junitproject.util.MailSender;
-import site.metacoding.junitproject.web.dto.BookRespDto;
-import site.metacoding.junitproject.web.dto.BookSaveReqDto;
+import site.metacoding.junitproject.web.dto.reponse.BookListRespDto;
+import site.metacoding.junitproject.web.dto.reponse.BookRespDto;
+import site.metacoding.junitproject.web.dto.request.BookSaveReqDto;
 
 @RequiredArgsConstructor
 @Service
@@ -37,7 +38,7 @@ public class BookService {
     }
 
     // 2. 책 목록보기
-    public List<BookRespDto> 책목록보기() {
+    public BookListRespDto 책목록보기() {
 
         List<BookRespDto> dtos = bookRepository.findAll().stream()
                 // .map(bookPS-> bookPS.toDto())
@@ -50,7 +51,8 @@ public class BookService {
         // System.out.println(dto.getTitle());
         // });
 
-        return dtos;
+        BookListRespDto bookListRespDto = BookListRespDto.builder().bookList(dtos).build();
+        return bookListRespDto;
     }
 
     // 3. 책 한건보기
