@@ -41,8 +41,8 @@ public class BookService {
     public BookListRespDto 책목록보기() {
 
         List<BookRespDto> dtos = bookRepository.findAll().stream()
-                // .map(bookPS-> bookPS.toDto())
-                .map(Book::toDto)
+                // .map(new BookRespDto()::Dto) <- 틀린부분 BookRespDto가 여러번 생성되지 않음
+                .map(Book::toDto) // .map(bookPS-> bookPS.toDto()) 와 같음
                 .collect(Collectors.toList());
 
         // dtos.stream().forEach(dto -> {
